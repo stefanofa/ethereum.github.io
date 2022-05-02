@@ -98,7 +98,7 @@ contract  SporteamsToken  is  ERC20 {
 }
 ```
 
-#### SporteamsNFT.sol + FixedPriceMarket.sol
+#### SporteamsNFT.sol
 
 Standard ERC721: [https://eips.ethereum.org/EIPS/eip-721](https://eips.ethereum.org/EIPS/eip-721)  
 Openzeppelin documentation: [https://docs.openzeppelin.com/contracts/4.x/erc721](https://docs.openzeppelin.com/contracts/4.x/erc721)  
