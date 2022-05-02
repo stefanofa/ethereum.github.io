@@ -1,37 +1,136 @@
-## Welcome to GitHub Pages
+# Link utili sviluppo Ethereum
 
-You can use the [editor on GitHub](https://github.com/stefanofa/ethereum.github.io/edit/gh-pages/index.md) to maintain and preview the content for your website in Markdown files.
+ - Ethereum development official documentation:
+   [_https://ethereum.org/en/developers/docs/_](https://ethereum.org/en/developers/docs/)
+ - EIP - Ethereum Improvement Proposals:
+   [_https://eips.ethereum.org/all_](https://eips.ethereum.org/all)
+  
+### Ambienti di sviluppo
+- Remix IDE: [_https://remix.ethereum.org/_](https://remix.ethereum.org/)
+- Hardhat: [_https://hardhat.org/getting-started/_](https://hardhat.org/getting-started/)
+- Openzeppelin Docs: [_https://docs.openzeppelin.com/contracts/4.x/_](https://docs.openzeppelin.com/contracts/4.x/)
+- Openzeppelin Github: [_https://github.com/OpenZeppelin/openzeppelin-contracts_](https://github.com/OpenZeppelin/openzeppelin-contracts)
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+### Smart Contract sviluppati
 
-### Markdown
+#### EtherSplit.sol
+```solidity
+// SPDX-License-Identifier: MIT
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+pragma solidity ^0.8.0;
 
-```markdown
-Syntax highlighted code block
+contract EtherSplit {
 
-# Header 1
-## Header 2
-### Header 3
+	address[] private receivers;
+	address deployer;
 
-- Bulleted
-- List
+	modifier  onlyDeployer() {
+		require(msg.sender  == deployer, 'Only deployer can do this operation');
+		_;
+	}
+	
+	constructor () {
+		deployer =  msg.sender;
+	}
+	 
+	function addReceiver (address _receiver) public onlyDeployer {
+		receivers.push(_receiver);
+	}
 
-1. Numbered
-2. List
+	function addReceivers (address[] memory _receivers) public {
+		for (uint i =  0; i < _receivers.length; ++i) {
+			addReceiver(_receivers[i]);
+		}
+	}
 
-**Bold** and _Italic_ and `Code` text
+	receive () external payable {
+		uint share = msg.value / receivers.length;
+		for (uint i =  0; i < receivers.length; ++i) {
+			payable(receivers[i]).transfer(share);
+		}
+		
+		// if the amount of ether sent is not divisible by the number of receivers,
+		// 'share' will be rounded down, so there may be a small amount of unused ether left
+		// that will be sent back to the sender of the transaction
+		// example :
+		// - value send: 7 wei
+		// - number of receivers: 3
+		// -> share = 7 / 3 = 2
+		// -> total amount split = 3 * 2 = 6
+		// -> leftover = 7 - 6 = 1
 
-[Link](url) and ![Image](src)
+		uint leftover =  address(this).balance;
+		payable(msg.sender).transfer(leftover);
+	}
+
+}
 ```
 
-For more details see [Basic writing and formatting syntax](https://docs.github.com/en/github/writing-on-github/getting-started-with-writing-and-formatting-on-github/basic-writing-and-formatting-syntax).
+#### SporteamsToken.sol
 
-### Jekyll Themes
+Standard ERC20: https://eips.ethereum.org/EIPS/eip-20
+Openzeppelin documentation: https://docs.openzeppelin.com/contracts/4.x/erc20
+Openzeppelin Implementation: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.6.0/contracts/token/ERC20/ERC20.sol
 
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/stefanofa/ethereum.github.io/settings/pages). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
+```solidity
+// SPDX-License-Identifier: GPL-3.0
 
-### Support or Contact
+pragma  solidity  ^0.8.0;
 
-Having trouble with Pages? Check out our [documentation](https://docs.github.com/categories/github-pages-basics/) or [contact support](https://support.github.com/contact) and we’ll help you sort it out.
+import  "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.6.0/contracts/token/ERC20/ERC20.sol";
+  
+contract  SporteamsToken  is  ERC20 {
+
+	uint8  private decimals;
+
+	constructor(uint8 _decimals) ERC20("SporteamsToken", "SPT") {
+	  decimals = _decimals;
+	}
+
+	function  decimals() public  view  virtual  override  returns (uint8) {
+	  return decimals;
+	}
+
+	function  receiveOneSPT() external {
+		_mint(msg.sender, 10  ** decimals);
+	}
+
+}
+```
+
+#### SporteamsNFT.sol + FixedPriceMarket.sol
+
+Standard ERC721: https://eips.ethereum.org/EIPS/eip-721
+Openzeppelin documentation: https://docs.openzeppelin.com/contracts/4.x/erc721
+Openzeppelin Implementation: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.6.0/contracts/token/ERC721/ERC721.sol
+
+```solidity
+// SPDX-License-Identifier: GPL-3.0
+
+pragma solidity ^0.8.0;
+
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.6.0/contracts/token/ERC721/ERC721.sol";
+import "https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.6.0/contracts/utils/Counters.sol";
+
+contract SporteamsNFT is ERC721 {
+	using Counters for Counters.Counter;
+
+	Counters.Counter private tokenIdTracker;
+	mapping(uint256 => string)  private tokenURIs;
+	
+	constructor () ERC721("SporteamsCollection", "SPTNFT") {}
+
+	function tokenURI(uint256 tokenId) public view virtual override  returns (string memory) {
+		require(_exists(tokenId), "ERC721Metadata: URI query for nonexistent token");
+		return tokenURIs[tokenId];
+	}
+
+	function mintMyNFT(string memory _tokenURI, address _to) external {
+		uint tokenId = tokenIdTracker.current();
+		_mint(_to, tokenId);
+		tokenURIs[tokenId] = _tokenURI;
+		tokenIdTracker.increment();
+	}
+
+}
+```
