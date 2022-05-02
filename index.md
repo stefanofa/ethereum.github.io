@@ -68,9 +68,9 @@ contract EtherSplit {
 
 #### SporteamsToken.sol
 
-Standard ERC20: https://eips.ethereum.org/EIPS/eip-20
-Openzeppelin documentation: https://docs.openzeppelin.com/contracts/4.x/erc20
-Openzeppelin Implementation: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.6.0/contracts/token/ERC20/ERC20.sol
+Standard ERC20: [https://eips.ethereum.org/EIPS/eip-20](https://eips.ethereum.org/EIPS/eip-20)
+Openzeppelin documentation: [https://docs.openzeppelin.com/contracts/4.x/erc20](https://docs.openzeppelin.com/contracts/4.x/erc20)
+Openzeppelin Implementation: [https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.6.0/contracts/token/ERC20/ERC20.sol](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.6.0/contracts/token/ERC20/ERC20.sol)
 
 ```solidity
 // SPDX-License-Identifier: GPL-3.0
@@ -100,9 +100,9 @@ contract  SporteamsToken  is  ERC20 {
 
 #### SporteamsNFT.sol + FixedPriceMarket.sol
 
-Standard ERC721: https://eips.ethereum.org/EIPS/eip-721
-Openzeppelin documentation: https://docs.openzeppelin.com/contracts/4.x/erc721
-Openzeppelin Implementation: https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.6.0/contracts/token/ERC721/ERC721.sol
+Standard ERC721: [https://eips.ethereum.org/EIPS/eip-721](https://eips.ethereum.org/EIPS/eip-721)
+Openzeppelin documentation: [https://docs.openzeppelin.com/contracts/4.x/erc721](https://docs.openzeppelin.com/contracts/4.x/erc721)
+Openzeppelin Implementation: [https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.6.0/contracts/token/ERC721/ERC721.sol](https://github.com/OpenZeppelin/openzeppelin-contracts/blob/v4.6.0/contracts/token/ERC721/ERC721.sol)
 
 ```solidity
 // SPDX-License-Identifier: GPL-3.0
